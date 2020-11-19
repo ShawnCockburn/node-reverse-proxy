@@ -1,0 +1,23 @@
+{
+  "name": "node-reverse-proxy",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShawnCockburn/node-reverse-proxy.git"
+  },
+  "author": "shawn cockburn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ShawnCockburn/node-reverse-proxy/issues"
+  },
+  "homepage": "https://github.com/ShawnCockburn/node-reverse-proxy#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "http-proxy": "^1.18.1"
+  }
+}
