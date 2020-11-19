@@ -50,23 +50,26 @@ const nodeProxy = config => {
         apiProxy.web(req, res, { target: requestedRoute.target });
     });
 
-    const sslServer = () => {
-        // Starting http server
-        const httpServer = http.createServer(app);
-        const httpport = 80;
-        httpServer.listen(httpport, () => {
-            console.log('HTTP Server running');
-        });
-
-        // Starting https server
-        const httpsServer = https.createServer(sslConfig, app);
-        const httpsport = 443;
-        httpsServer.listen(httpsport, () => {
-            console.log('HTTPS Server running');
-        });
-    };
-
-    sslServer();
+    return app;
 }
 
+const Server = (server) => {
+    if (server === undefined) throw "Express Proxy Server Required!";
+    
+    // Starting http server
+    const httpServer = http.createServer(server);
+    const httpport = 80;
+    httpServer.listen(httpport, () => {
+        console.log('HTTP Server running');
+    });
+
+    // Starting https server
+    const httpsServer = https.createServer(sslConfig, server);
+    const httpsport = 443;
+    httpsServer.listen(httpsport, () => {
+        console.log('HTTPS Server running');
+    });
+};
+
 module.exports = nodeProxy;
+module.exports.Server = Server;
