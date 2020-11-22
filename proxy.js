@@ -48,6 +48,12 @@ const nodeProxy = config => {
         const requestedRoute = routes.find(route => route.host === host);
         if (!requestedRoute) throw `${host} not found in routes!`;
         apiProxy.web(req, res, { target: requestedRoute.target });
+        apiProxy.on('error', (err, req, res) =>{
+          res.writeHead(500, {
+            'Content-Type': 'text/plain'
+          });
+          res.end('Something went wrong.');
+        });
     });
 
     return {app:app, sslConfig: sslConfig};
