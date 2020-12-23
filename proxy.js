@@ -45,25 +45,25 @@ const nodeProxy = config => {
     // proxies
     app.all("*", function (req, res) {
         const host = req.headers.host;
-        const requestedRoute = routes.find(route => route.host === host);
+        const requestedRoute = routes.find(route => route.host === host || ("www." + route.host) === host);
         if (!requestedRoute) throw `${host} not found in routes!`;
         apiProxy.web(req, res, { target: requestedRoute.target });
-        apiProxy.on('error', (err, req, res) =>{
-          res.writeHead(500, {
-            'Content-Type': 'text/plain'
-          });
-          res.end('Something went wrong.');
+        apiProxy.on('error', (err, req, res) => {
+            res.writeHead(500, {
+                'Content-Type': 'text/plain'
+            });
+            res.end('Something went wrong.');
         });
     });
 
-    return {app:app, sslConfig: sslConfig};
+    return { app: app, sslConfig: sslConfig };
 }
 
 const Server = (serverObject) => {
-    const {app, sslConfig} = serverObject;
+    const { app, sslConfig } = serverObject;
     if (app === undefined) throw "Express Proxy Server Required!";
     if (sslConfig === undefined) throw "SSL must be configurated."
-    
+
     // Starting http server
     const httpServer = http.createServer(app);
     const httpport = 80;
