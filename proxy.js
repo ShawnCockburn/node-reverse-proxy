@@ -46,7 +46,7 @@ const nodeProxy = config => {
     app.all("*", function (req, res) {
         const host = req.headers.host;
         const requestedRoute = routes.find(route => route.host === host || ("www." + route.host) === host);
-        if (!requestedRoute) throw `${host} not found in routes!`;
+        if (!requestedRoute) return res.statusCode(404);
         apiProxy.web(req, res, { target: requestedRoute.target });
         apiProxy.on('error', (err, req, res) => {
             res.writeHead(500, {
