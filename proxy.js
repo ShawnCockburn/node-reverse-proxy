@@ -30,15 +30,17 @@ const nodeProxy = config => {
   */
      } = config;
     if (routes === undefined || routes.length == 0)
-        throw "Routes must be configurated.";
+        throw "Routes must be configured.";
     if (sslConfig === undefined)
-        throw "SSL must be configurated.";
+        throw "SSL must be configured.";
     // force ssl
     if (forceSSL) {
         app.use((req, res, next) => {
+            //@ts-ignore
             if (req.connection.encrypted)
                 return next();
             res.redirect(301, 'https://' + req.headers.host + req.url);
+            return;
         });
     }
     // proxies
@@ -46,18 +48,17 @@ const nodeProxy = config => {
         const host = req.headers.host;
         const requestedRoute = routes.find(route => route.host === host || ("www." + route.host) === host);
         if (!requestedRoute)
-            return res.statusCode(404);
+            return res.status(404);
         try {
             apiProxy.web(req, res, { target: requestedRoute.target });
-            apiProxy.on('error', (err, req, res) => {
-                res.writeHead(500, {
-                    'Content-Type': 'text/plain'
-                });
-                res.end('Something went wrong.');
+            apiProxy.on('error', (err) => {
+                res.status(500).send('Something went wrong.');
+                return;
             });
         }
         catch (error) {
-            res.statusCode(500);
+            res.status(500);
+            return;
         }
     });
     return { app: app, sslConfig: sslConfig };
